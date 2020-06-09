@@ -75,6 +75,7 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	private DefaultListableBeanFactory beanFactory;
 
 	/** Synchronization monitor for the internal BeanFactory */
+	/**内部BeanFactory的同步监视器*/
 	private final Object beanFactoryMonitor = new Object();
 
 

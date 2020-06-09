@@ -77,12 +77,14 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<>(16);
 
 	/** Cache of early singleton objects: bean name --> bean instance */
+	/**二级缓存,早期的单例对象*/
 	private final Map<String, Object> earlySingletonObjects = new HashMap<>(16);
 
 	/** Set of registered singletons, containing the bean names in registration order */
 	private final Set<String> registeredSingletons = new LinkedHashSet<>(256);
 
 	/** Names of beans that are currently in creation */
+	/**正在被创建的单例对象缓冲区*/
 	private final Set<String> singletonsCurrentlyInCreation =
 			Collections.newSetFromMap(new ConcurrentHashMap<>(16));
 
@@ -174,13 +176,19 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 */
 	@Nullable
 	protected Object getSingleton(String beanName, boolean allowEarlyReference) {
+		//从单例池中获取注册的bean
 		Object singletonObject = this.singletonObjects.get(beanName);
+		//判断，如果当前从单例池中获取bean失败，那么判断当前这个对象是否在创建过程中
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
 			synchronized (this.singletonObjects) {
+				//如果从singletonObjects 中没有获取到当前bean,尝试从二级缓存中获取,这里是存放的已经实例化好的bean
 				singletonObject = this.earlySingletonObjects.get(beanName);
+				//如果二级缓存中仍然没有获取到当前对象并且支持earlyReference
 				if (singletonObject == null && allowEarlyReference) {
+					//选择从一级缓存中获取，这里存放的是刚实例化好的bean
 					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
 					if (singletonFactory != null) {
+						//如果从一级缓存中获取到了，那么这里应该是创建好了bean，所以应该把当前bean从一级缓存中移除掉，然后放到二级缓存中
 						singletonObject = singletonFactory.getObject();
 						this.earlySingletonObjects.put(beanName, singletonObject);
 						this.singletonFactories.remove(beanName);
@@ -320,7 +328,8 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	}
 
 	/**
-	 * Return whether the specified singleton bean is currently in creation
+	 * Return whether(是否) the specified（指定的）singleton bean is currently(目前) in creation
+	 * 返回指定的单例bean目前是否正在创建
 	 * (within the entire factory).
 	 * @param beanName the name of the bean
 	 */
