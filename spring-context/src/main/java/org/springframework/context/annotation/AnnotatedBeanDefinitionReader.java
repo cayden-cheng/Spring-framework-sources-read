@@ -118,6 +118,7 @@ public class AnnotatedBeanDefinitionReader {
 	 * <p>The default is an {@link AnnotationScopeMetadataResolver}.
 	 */
 	public void setScopeMetadataResolver(@Nullable ScopeMetadataResolver scopeMetadataResolver) {
+		// 支持传入 scopeMetadataResolver 来修改已定义的 scopeMetadataResolver
 		this.scopeMetadataResolver =
 				(scopeMetadataResolver != null ? scopeMetadataResolver : new AnnotationScopeMetadataResolver());
 	}
@@ -213,14 +214,22 @@ public class AnnotatedBeanDefinitionReader {
 	<T> void doRegisterBean(Class<T> annotatedClass, @Nullable Supplier<T> instanceSupplier, @Nullable String name,
 			@Nullable Class<? extends Annotation>[] qualifiers, BeanDefinitionCustomizer... definitionCustomizers) {
 
+		//初始化 AnnotationBeanDefinition  初始化带有注入的类，这里由AnnotationConfigrationContext 传入，
+		// 可以传入配置文件或者一个bean，都能在这里被初始化 init 支持多个bean,拿到所有的注解和初始化bean
 		AnnotatedGenericBeanDefinition abd = new AnnotatedGenericBeanDefinition(annotatedClass);
+		//这里根据@Condition判断是否要进行注解解析,emmmmmm,springboot中大量使用了@Condition注解，这里不用仔细看
 		if (this.conditionEvaluator.shouldSkip(abd.getMetadata())) {
 			return;
 		}
 
 		abd.setInstanceSupplier(instanceSupplier);
+		//解析当前bean的作用域，当前scopeMetadataResolver 注入的是AnnotationScopeMetadataResolver
+		// 具体在哪儿注入的需要重新看,这里是类初始化的时候new了一个,fuck!!! 也可以通过构造方法传入 只是解析了一下，没什么卵用
+		// 如果没填，默认就是单例的
 		ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(abd);
+		//设置作用域
 		abd.setScope(scopeMetadata.getScopeName());
+		//解析beanName，因为bean有一个可重命名 当前这个beanNameGenerator 也是类初始化的时候new的 初始化的是 AnnotationBeanNameGenerator
 		String beanName = (name != null ? name : this.beanNameGenerator.generateBeanName(abd, this.registry));
 
 		AnnotationConfigUtils.processCommonDefinitionAnnotations(abd);

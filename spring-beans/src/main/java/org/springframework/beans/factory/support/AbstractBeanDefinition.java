@@ -705,6 +705,8 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * <p>If such a callback is set, it will override any other constructor
 	 * or factory method metadata. However, bean property population and
 	 * potential annotation-driven injection will still apply as usual.
+	 *translation:指定用于创建bean实例的回调，*作为声明性指定的工厂方法的替代方法。 *
+	 * <p>如果设置了此类回调，它将覆盖任何其他构造函数*或工厂方法元数据。但是，bean属性填充和*可能由注释驱动的注入将照常应用。
 	 * @since 5.0
 	 * @see #setConstructorArgumentValues(ConstructorArgumentValues)
 	 * @see #setPropertyValues(MutablePropertyValues)

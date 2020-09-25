@@ -54,7 +54,9 @@ public class AnnotatedGenericBeanDefinition extends GenericBeanDefinition implem
 	 * @param beanClass the loaded bean class
 	 */
 	public AnnotatedGenericBeanDefinition(Class<?> beanClass) {
+		//因为当前类直接继承了AbstractBeanDefinition 所以，这里直接把当前对象看做一个bean对象赋值给了beanClass
 		setBeanClass(beanClass);
+		//这里要把源注解放到当前类中 可以把这个AnnotatedGenericBeanDefinition看作一个bean对象,把元注解抽象成对象
 		this.metadata = new StandardAnnotationMetadata(beanClass, true);
 	}
 
