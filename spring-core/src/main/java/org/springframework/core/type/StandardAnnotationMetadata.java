@@ -68,7 +68,7 @@ public class StandardAnnotationMetadata extends StandardClassMetadata implements
 	public StandardAnnotationMetadata(Class<?> introspectedClass, boolean nestedAnnotationsAsMap) {
 		//解析bean 这里beanClass调用了父类的方法，为什么呢? 父类只是赋值，省内对象，上一个方法也赋值了，
 		super(introspectedClass);
-		//这个方法就很重要了，这个方法把当前类的所有注解拿出来了
+		//这个方法就很重要了，这个方法把当前类的所有注解拿出来了,这个很重要，因为把注解放进去了，所以在StandardAnnotationMetadata 中可以直接取到他的注解
 		this.annotations = introspectedClass.getAnnotations();
 		//就只是赋值，不需要太关心 这个代表嵌套注释，就是我们常说的组合注解 boolean 代表是否支持组合注解
 		this.nestedAnnotationsAsMap = nestedAnnotationsAsMap;

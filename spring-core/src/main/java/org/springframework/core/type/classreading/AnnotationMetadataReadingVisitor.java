@@ -134,6 +134,7 @@ public class AnnotationMetadataReadingVisitor extends ClassMetadataReadingVisito
 	@Override
 	@Nullable
 	public AnnotationAttributes getAnnotationAttributes(String annotationName, boolean classValuesAsString) {
+		// 现在还不知道什么时候注册了AnnotationMetadataReadingVisitor 这个类，为什么当前方法返回的是这个类
 		AnnotationAttributes raw = AnnotationReadingVisitorUtils.getMergedAnnotationAttributes(
 				this.attributesMap, this.metaAnnotationMap, annotationName);
 		if (raw == null) {
