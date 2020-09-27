@@ -13,17 +13,14 @@ buildscript {
 
 // 3rd party plugin repositories can be configured in settings.gradle
 plugins {
-	id "com.gradle.build-scan" version "1.8"
+	id "com.gradle.build-scan" version "3.4.1"
 	id "io.spring.dependency-management" version "1.0.7.RELEASE" apply false
-	id "org.jetbrains.kotlin.jvm" version "1.2.71" apply false
+	id "org.jetbrains.kotlin.jvm" version "1.4.10" apply false
 	id "org.jetbrains.dokka" version "0.9.18"
 	id "org.asciidoctor.convert" version "1.5.6"
 }
 
-buildScan {
-	licenseAgreementUrl = "https://gradle.com/terms-of-service"
-	licenseAgree = "yes"
-}
+
 
 ext {
 	linkHomepage = "https://projects.spring.io/spring-framework"
@@ -46,7 +43,7 @@ ext {
 	junitJupiterVersion  = "5.0.3"
 	junitPlatformVersion = "1.0.3"
 	junitVintageVersion  = "4.12.3"
-	kotlinVersion        = "1.2.71"
+	kotlinVersion        = "1.4.10"
 	log4jVersion         = "2.11.2"
 	nettyVersion         = "4.1.39.Final"
 	reactorVersion       = "Bismuth-SR17"
@@ -127,8 +124,8 @@ configure(allprojects) { project ->
 		kotlinOptions {
 			jvmTarget = "1.8"
 			freeCompilerArgs = ["-Xjsr305=strict"]
-			apiVersion = "1.1"
-			languageVersion = "1.1"
+			apiVersion = "1.4"
+			languageVersion = "1.4"
 		}
 	}
 
@@ -291,9 +288,9 @@ configure(rootProject) {
 		archives distZip
 	}
 
-	task wrapper(type: Wrapper) {
+	wrapper{
 		description = "Generates gradlew[.bat] scripts"
-		gradleVersion = "4.4.1"
+		gradleVersion = "5.3.1"
 
 		doLast() {
 			def gradleOpts = "-XX:MaxMetaspaceSize=1024m -Xmx1024m"
