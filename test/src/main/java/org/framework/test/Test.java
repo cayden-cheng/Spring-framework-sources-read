@@ -18,7 +18,8 @@ public class Test {
 		//notthing
 		AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(Config.class);
 		SimpleBean simpleBean = ac.getBean(SimpleBean.class);
+		SimpleBean simpleBean1 = ac.getBean(SimpleBean.class);
 		simpleBean.send();
-
+		System.out.println(simpleBean.hashCode() + "------------------" + simpleBean1.hashCode());
 	}
 }
