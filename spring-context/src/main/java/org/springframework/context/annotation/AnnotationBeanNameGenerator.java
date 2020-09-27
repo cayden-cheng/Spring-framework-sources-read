@@ -68,9 +68,7 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 
 	@Override
 	public String generateBeanName(BeanDefinition definition, BeanDefinitionRegistry registry) {
-		//这里注入进来的register就是AnnotationConfigBeanDefinitionRegister
 		if (definition instanceof AnnotatedBeanDefinition) {
-			//通过注释去获取bean名称，如果没有获取到，那么直接放弃返回null
 			String beanName = determineBeanNameFromAnnotation((AnnotatedBeanDefinition) definition);
 			if (StringUtils.hasText(beanName)) {
 				// Explicit bean name found.
@@ -90,10 +88,8 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 	 */
 	@Nullable
 	protected String determineBeanNameFromAnnotation(AnnotatedBeanDefinition annotatedDef) {
-		//拿到所有的元注解,但是搞不懂为什么要拿,注入进来的AnnotatedBeanDefinition 是当前bean实例化对象
-		// 这里取得Metadata 其实就是AnnotatedGenericBeanDefinition 初始化的设置的注册对象信息
+		//拿到所有的元注解,但是搞不懂为什么要拿，神经病
 		AnnotationMetadata amd = annotatedDef.getMetadata();
-		//获取所有注解的类型 将所有注解扫描出来了
 		Set<String> types = amd.getAnnotationTypes();
 		String beanName = null;
 		for (String type : types) {
@@ -159,8 +155,6 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 		String beanClassName = definition.getBeanClassName();
 		Assert.state(beanClassName != null, "No bean class name set");
 		String shortClassName = ClassUtils.getShortName(beanClassName);
-		//jdk的方法，将一个类从变为变量，但是如果首字母与第二个字母都是大写，
-		// 那么就不会处理，这里思考，spring如果我们没有按照驼峰命名，那么很可能发生注入对象失败，尤其是byName
 		return Introspector.decapitalize(shortClassName);
 	}
 

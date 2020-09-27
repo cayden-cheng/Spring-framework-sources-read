@@ -32,6 +32,9 @@ import org.springframework.util.StringUtils;
  */
 public class StandardClassMetadata implements ClassMetadata {
 
+	/**
+	 * 内省类，当前这个类是初始化的类，同beanDefinition
+	 */
 	private final Class<?> introspectedClass;
 
 

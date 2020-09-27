@@ -242,6 +242,7 @@ public class AnnotationConfigUtils {
 		if (lazy != null) {
 			abd.setLazyInit(lazy.getBoolean("value"));
 		}
+		//这个只是做了一个判断，防止metadata已经被更改，如果被更改，那么重新加载
 		else if (abd.getMetadata() != metadata) {
 			lazy = attributesFor(abd.getMetadata(), Lazy.class);
 			if (lazy != null) {
@@ -249,6 +250,7 @@ public class AnnotationConfigUtils {
 			}
 		}
 
+		//这里调用的是StandardAnnotationMetadata 的实现类，判断当前类是否被注解@primary 如果已经被注解了，就设置AnnotatedBeanDefinition 为true
 		if (metadata.isAnnotated(Primary.class.getName())) {
 			abd.setPrimary(true);
 		}
