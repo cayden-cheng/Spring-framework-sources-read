@@ -88,7 +88,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 		this();
 		// 本质就是在注册 registerBeanDefinition
 		register(annotatedClasses);
-		
+		// 刷新
 		refresh();
 	}
 
