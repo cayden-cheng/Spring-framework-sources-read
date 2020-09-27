@@ -252,9 +252,15 @@ public class AnnotatedBeanDefinitionReader {
 			customizer.customize(abd);
 		}
 
-		//bean定义持有人
+		// bean定义持有人 在这里其实就已经把 registerBeanDefinition 需要的 beanDefinition 注册进去了，详情可点击此方法观察
+		// 其本质其实就是 AnnotatedGenericBeanDefinition 这里传入的，里面赋值而已 这里的构造方法没有传入aliases(别名)，
+		// 在registerBeanDefinition方法中将会拓展这个方法，如果有 aliases 将会赋值
 		BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(abd, beanName);
+		// 应用作用代理模式 scopeMetadata 作用域数据源，判断 scope 如果是一个目标方法，这里要使用代理创建对象
 		definitionHolder = AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
+		// 这行比较重要在注册BeanDefinitionReader 这里的 registry 其实是 AnnotationConfigApplicationContext 这个是在this 当前初始化方法的时候构造方法传入的
+		// AnnotationConfigApplicationContext 继承了 GenericApplicationContext 去实现了 BeanDefinitionRegistry，所以啊 其实际，这里初始化的BeanFactory 都是 DefaultListableBeanFactory
+		// 我们以后取 bean 的时候也是从 DefaultListableBeanFactory 中获取，因为他最终都是去实现了beanFactory
 		BeanDefinitionReaderUtils.registerBeanDefinition(definitionHolder, this.registry);
 	}
 

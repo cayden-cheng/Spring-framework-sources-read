@@ -52,6 +52,7 @@ public enum ScopedProxyMode {
 
 	/**
 	 * Create a class-based proxy (uses CGLIB).
+	 * 创建一个基础代理(使用的是CGLIB 代理)
 	 */
 	TARGET_CLASS;
 

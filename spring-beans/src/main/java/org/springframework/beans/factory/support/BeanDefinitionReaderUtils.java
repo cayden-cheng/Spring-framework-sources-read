@@ -146,10 +146,15 @@ public class BeanDefinitionReaderUtils {
 			throws BeanDefinitionStoreException {
 
 		// Register bean definition under primary name.
+		// 在主名称下注册beanName,从BeanDefinitionHolder中获取的BeanName 这里的 definitionHolder 是 AnnotatedGenericBeanDefinition
 		String beanName = definitionHolder.getBeanName();
+		// 注册BeanDefinition，这里才是关键,这里获取到的BeanDefinition 的实现，其实是 AnnotatedGenericBeanDefinition
+		// 所以这里取到的beanDefinition 是 AbstractApplicationContext，bean初始化的时候 GenericApplicationContext 是调用的这个类，详细请看上一个方法
+		// 这里就很重要了 GenericApplicationContext 的构造方法 初始化了 其实这里最主要就是把传入的对象放到DefaultListableBeanFactory中,所以，调用的是 GenericApplicationContext
 		registry.registerBeanDefinition(beanName, definitionHolder.getBeanDefinition());
 
 		// Register aliases for bean name, if any.
+		// 处理spring别名，这里其实可以不太关注 在 AnnotatedGenericBeanDefinition 其实是没有处理这个东西的，设置了一个null
 		String[] aliases = definitionHolder.getAliases();
 		if (aliases != null) {
 			for (String alias : aliases) {
