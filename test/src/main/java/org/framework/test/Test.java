@@ -15,6 +15,7 @@ public class Test {
 		SimpleBean bean = context.getBean(SimpleBean.class);
 		bean.send();
 		context.close();*/
+		//notthing
 		AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(Config.class);
 		SimpleBean simpleBean = ac.getBean(SimpleBean.class);
 		simpleBean.send();
