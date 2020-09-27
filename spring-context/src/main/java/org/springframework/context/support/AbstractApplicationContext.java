@@ -187,7 +187,6 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	private final AtomicBoolean closed = new AtomicBoolean();
 
 	/** Synchronization monitor for the "refresh" and "destroy" */
-	/** Í¬²½¼àÊÓÆ÷µÄ¡°Ë¢ĞÂ¡±ºÍ¡°Ïú»Ù¡± */
 	private final Object startupShutdownMonitor = new Object();
 
 	/** Reference to the JVM shutdown hook, if registered */
@@ -223,7 +222,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 	/**
 	 * Create a new AbstractApplicationContext with no parent.
-	 * ´´½¨Ò»¸öĞÂµÄÃ»ÓĞ¸¸ÀàµÄÀà
+	 * åˆ›å»ºä¸€ä¸ªæ–°çš„æ²¡æœ‰çˆ¶ç±»çš„ç±»
 	 */
 	public AbstractApplicationContext() {
 		this.resourcePatternResolver = getResourcePatternResolver();
@@ -231,7 +230,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 	/**
 	 * Create a new AbstractApplicationContext with the given parent context.
-	 * ´´½¨Ò»¸öĞÂµÄ²¢ÇÒÓĞ¸¸ÀàÉÏÎÄµÄÀà
+	 * åˆ›å»ºä¸€ä¸ªæ–°çš„å¹¶ä¸”æœ‰çˆ¶ç±»ä¸Šæ–‡çš„ç±»
 	 * @param parent the parent context
 	 */
 	public AbstractApplicationContext(@Nullable ApplicationContext parent) {
@@ -511,7 +510,6 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 	/**
 	 * Return the list of statically specified ApplicationListeners.
-	 * ·µ»Ø¾²Ì¬Ö¸¶¨µÄApplicationListenersÁĞ±í
 	 */
 	public Collection<ApplicationListener<?>> getApplicationListeners() {
 		return this.applicationListeners;
@@ -519,14 +517,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 	@Override
 	public void refresh() throws BeansException, IllegalStateException {
-		// ³õÊ¼»¯ AnnotationConfigApplicationContext µÄÊ±ºò£¬¾ÍÒÑ¾­°Ñ AbstractApplicationContext ³õÊ¼»¯Íê³ÉÁË
 		synchronized (this.startupShutdownMonitor) {
 			// Prepare this context for refreshing.
-			// ×¼±¸´ËÉÏÏÂÎÄÒÔ½øĞĞË¢ĞÂ¡£
 			prepareRefresh();
 
 			// Tell the subclass to refresh the internal bean factory.
-			// ¸æËß×ÓÀàÈ¥Ë¢ĞÂ bean¹¤³§ µ±Ç°ÀàµÄ×ÓÀà¾ÍÊÇ DefaultListableBeanFactory ÕâÀï¿ÉÒÔ×¢ÒâÒ»ÏÂ
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
@@ -591,9 +586,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	protected void prepareRefresh() {
 		// Switch to active.
-		// ¿ªÊ¼µÄÊ±¼ä£¬¾ÍÊÇµ±Ç°ÏµÍ³µÄÊ±¼ä
 		this.startupDate = System.currentTimeMillis();
-		// ÈÃÈİÒ×¿ÉÓÃ£¬ÏÂÃæÁ½¸öÉèÖÃ¶¼ÊÇ
 		this.closed.set(false);
 		this.active.set(true);
 
@@ -602,13 +595,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		}
 
 		// Initialize any placeholder property sources in the context environment.
-		// Ê²Ã´¶¼Ã»×ö£¬Õâ¸ö·½·¨¿ÉÄÜÔÚÎ´À´µÄspringÖĞ»á½øĞĞÍØÕ¹
 		initPropertySources();
 
 		// Validate that all properties marked as required are resolvable:
 		// see ConfigurablePropertyResolver#setRequiredProperties
-		// µ±Ç° enviroment µÄÊµÏÖÀàÊÇ StandardEnvironment ËûÓĞÒ»¸ö³éÏóÀà AbstractEnvironment ·½·¨ÊÇ½»ÓÉ¸øAbstractEnvironment ÊµÏÖµÄ£¬
-		// ¶øÕâ¸ö·½·¨ÊÇÊµÏÖµÄ ConfigurableEnvironment ½Ó¿Ú
 		getEnvironment().validateRequiredProperties();
 
 		// Store pre-refresh ApplicationListeners...
@@ -632,13 +622,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see org.springframework.web.context.support.WebApplicationContextUtils#initServletPropertySources
 	 */
 	protected void initPropertySources() {
-		// Ê²Ã´¶¼Ã»×ö£¬Õâ¸ö·½·¨¿ÉÄÜÔÚÎ´À´µÄspringÖĞ»á½øĞĞÍØÕ¹
 		// For subclasses: do nothing by default.
 	}
 
 	/**
 	 * Tell the subclass to refresh the internal bean factory.
-	 * ¸æËß×ÓÀàÈ¥Ë¢ĞÂ¹¤³§
 	 * @return the fresh BeanFactory instance
 	 * @see #refreshBeanFactory()
 	 * @see #getBeanFactory()
@@ -1137,7 +1125,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 	@Override
 	public <T> T getBean(Class<T> requiredType) throws BeansException {
-		//Ğ£Ñéµ±Ç°´«ÈëbeanÊÇ·ñºÏ¸ñ
+		//æ ¡éªŒå½“å‰ä¼ å…¥beanæ˜¯å¦åˆæ ¼
 		assertBeanFactoryActive();
 		ConfigurableListableBeanFactory beanFactory = getBeanFactory();
 		return beanFactory.getBean(requiredType);
