@@ -1,6 +1,8 @@
 package org.framework.test;
 
 import org.framework.dao.Config;
+import org.framework.dao.Dao;
+import org.framework.dao.MyBeanFactoryPostProcessor;
 import org.framework.dao.SimpleBean;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -16,10 +18,15 @@ public class Test {
 		bean.send();
 		context.close();*/
 		//notthing
-		AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(Config.class);
+		AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext();
+		// 如果我们自己去实现了 BeanFactoryPostProcessor 则需要手动把当前类注册到
+		// beanFactoryPostProcessors，否则不会在 invokeBeanFactoryPostProcessors 中解析
+		ac.addBeanFactoryPostProcessor(new MyBeanFactoryPostProcessor());
+		ac.register(Config.class, MyBeanFactoryPostProcessor.class);
+		ac.refresh();
 		SimpleBean simpleBean = ac.getBean(SimpleBean.class);
-		SimpleBean simpleBean1 = ac.getBean(SimpleBean.class);
 		simpleBean.send();
-		System.out.println(simpleBean.hashCode() + "------------------" + simpleBean1.hashCode());
+		Dao bean = ac.getBean(Dao.class);
+		bean.print();
 	}
 }
