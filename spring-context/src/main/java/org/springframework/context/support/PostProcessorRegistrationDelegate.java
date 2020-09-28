@@ -48,17 +48,30 @@ import org.springframework.lang.Nullable;
  */
 final class PostProcessorRegistrationDelegate {
 
+	/**
+	 * 这个方法主要是去处理 beanFactoryPostProcessors
+	 * @param beanFactory
+	 * @param beanFactoryPostProcessors
+	 */
 	public static void invokeBeanFactoryPostProcessors(
 			ConfigurableListableBeanFactory beanFactory, List<BeanFactoryPostProcessor> beanFactoryPostProcessors) {
 
 		// Invoke BeanDefinitionRegistryPostProcessors first, if any.
+		// 如果有的话，首先调用BeanDefinitionRegistryPostProcessors。
+		// 只是 new 了一个 hashset 具体有什么用，看完下面再说
+		//
 		Set<String> processedBeans = new HashSet<>();
 
+		// 1.判断beanFactory是否为BeanDefinitionRegistry，在这里普通的beanFactory是DefaultListableBeanFactory,
+		// 而DefaultListableBeanFactory实现了BeanDefinitionRegistry接口，因此这边为true
 		if (beanFactory instanceof BeanDefinitionRegistry) {
 			BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory;
+			// 解析自定义的 BeanFactoryPostProcessor
 			List<BeanFactoryPostProcessor> regularPostProcessors = new ArrayList<>();
+			// 解析自定义的 BeanDefinitionRegistryPostProcessor 这个类是 BeanFactoryPostProcessor 的子类，也是一个接口
 			List<BeanDefinitionRegistryPostProcessor> registryProcessors = new ArrayList<>();
 
+			// 这个方法就比较简单了，自己看，只是为了区分父类和子类
 			for (BeanFactoryPostProcessor postProcessor : beanFactoryPostProcessors) {
 				if (postProcessor instanceof BeanDefinitionRegistryPostProcessor) {
 					BeanDefinitionRegistryPostProcessor registryProcessor =
@@ -71,13 +84,21 @@ final class PostProcessorRegistrationDelegate {
 				}
 			}
 
+			// 以下是官方的解释，还是很有必要看一下的
 			// Do not initialize FactoryBeans here: We need to leave all regular beans
+			// 不要在这里初始化 factoryBeans : 我们需要保存所有未初始化的 bean
 			// uninitialized to let the bean factory post-processors apply to them!
+			// 未初始化，让Bean工厂后处理器对其应用！
 			// Separate between BeanDefinitionRegistryPostProcessors that implement
+			// 把 BeanDefinitionRegistryPostProcessors 和他的实现分开
 			// PriorityOrdered, Ordered, and the rest.
+			// 优先顺序，排序，或者其他
+			// 这个数组 new 出来只是为了和自定义的 BeanDefinitionRegistryPostProcessor 分开，一个是 spring 内部实现
+			// 一个是自定义实现，还是很不同的
 			List<BeanDefinitionRegistryPostProcessor> currentRegistryProcessors = new ArrayList<>();
 
 			// First, invoke the BeanDefinitionRegistryPostProcessors that implement PriorityOrdered.
+			// 首先，执行 PriorityOrdered 的实现 BeanDefinitionRegistryPostProcessors
 			String[] postProcessorNames =
 					beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true, false);
 			for (String ppName : postProcessorNames) {
@@ -88,6 +109,7 @@ final class PostProcessorRegistrationDelegate {
 			}
 			sortPostProcessors(currentRegistryProcessors, beanFactory);
 			registryProcessors.addAll(currentRegistryProcessors);
+			// 这个方法很重要，这个方法内部解析了 @ComponentScan 扫描工作就是在这这里完成的
 			invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
 			currentRegistryProcessors.clear();
 
