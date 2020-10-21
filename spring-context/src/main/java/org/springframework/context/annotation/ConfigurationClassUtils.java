@@ -74,22 +74,26 @@ abstract class ConfigurationClassUtils {
 	 * Check whether the given bean definition is a candidate for a configuration class
 	 * (or a nested component class declared within a configuration/component class,
 	 * to be auto-registered as well), and mark it accordingly.
+	 * 检查配置类选项,简单来说，就是检查这个类是否是一个配置类，如果是返回 true
 	 * @param beanDef the bean definition to check
 	 * @param metadataReaderFactory the current factory in use by the caller
 	 * @return whether the candidate qualifies as (any kind of) configuration class
 	 */
 	public static boolean checkConfigurationClassCandidate(BeanDefinition beanDef, MetadataReaderFactory metadataReaderFactory) {
+		// 获取beanName
 		String className = beanDef.getBeanClassName();
 		if (className == null || beanDef.getFactoryMethodName() != null) {
 			return false;
 		}
 
 		AnnotationMetadata metadata;
+		// 判断这个类是不是 AnnotatedBeanDefinition 的子类，如果是子类，就把 metadata 转化为 AnnotatedBeanDefinition 处理
 		if (beanDef instanceof AnnotatedBeanDefinition &&
 				className.equals(((AnnotatedBeanDefinition) beanDef).getMetadata().getClassName())) {
 			// Can reuse the pre-parsed metadata from the given BeanDefinition...
 			metadata = ((AnnotatedBeanDefinition) beanDef).getMetadata();
 		}
+		// 判断这个类是不是 AbstractBeanDefinition 如果是，metadata 转化为 AbstractBeanDefinition 的 metadata
 		else if (beanDef instanceof AbstractBeanDefinition && ((AbstractBeanDefinition) beanDef).hasBeanClass()) {
 			// Check already loaded Class if present...
 			// since we possibly can't even load the class file for this Class.
@@ -98,6 +102,7 @@ abstract class ConfigurationClassUtils {
 		}
 		else {
 			try {
+				// metadataReader 是 元数据
 				MetadataReader metadataReader = metadataReaderFactory.getMetadataReader(className);
 				metadata = metadataReader.getAnnotationMetadata();
 			}
@@ -120,6 +125,7 @@ abstract class ConfigurationClassUtils {
 		}
 
 		// It's a full or lite configuration candidate... Let's determine the order value, if any.
+		// 他是一个完整或者少许的配置文件类，这里就需要对 Order 进行配置，对初始化顺序进行调整
 		Integer order = getOrder(metadata);
 		if (order != null) {
 			beanDef.setAttribute(ORDER_ATTRIBUTE, order);

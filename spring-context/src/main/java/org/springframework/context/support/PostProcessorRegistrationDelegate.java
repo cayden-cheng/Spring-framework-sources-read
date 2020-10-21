@@ -107,9 +107,12 @@ final class PostProcessorRegistrationDelegate {
 					processedBeans.add(ppName);
 				}
 			}
+
+			//这个方法就是进行了一下排序，不太重要
 			sortPostProcessors(currentRegistryProcessors, beanFactory);
+			// 把我们自定义的 postProcess 和 spring内部的 postProcess 合并
 			registryProcessors.addAll(currentRegistryProcessors);
-			// 这个方法很重要，这个方法内部解析了 @ComponentScan 扫描工作就是在这这里完成的
+			// 这个方法很重要，这个方法内部解析了 @ComponentScan 扫描工作就是在这这里完成的,需要点进去详细看
 			invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
 			currentRegistryProcessors.clear();
 
