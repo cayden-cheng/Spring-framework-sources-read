@@ -276,6 +276,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	@Override
 	public Resource[] getResources(String locationPattern) throws IOException {
 		Assert.notNull(locationPattern, "Location pattern must not be null");
+		// 使用 classPath 的类路径
 		if (locationPattern.startsWith(CLASSPATH_ALL_URL_PREFIX)) {
 			// a class path resource (multiple resources for same name possible)
 			if (getPathMatcher().isPattern(locationPattern.substring(CLASSPATH_ALL_URL_PREFIX.length()))) {
@@ -487,8 +488,11 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	 * @see org.springframework.util.PathMatcher
 	 */
 	protected Resource[] findPathMatchingResources(String locationPattern) throws IOException {
+		// 这里其实就是将 locationPattern 进行分割,如原本是 classpath*:org/framework/dao/**/*.class
 		String rootDirPath = determineRootDir(locationPattern);
+		// classpath*:org/framework/dao/
 		String subPattern = locationPattern.substring(rootDirPath.length());
+		// /**/*.class
 		Resource[] rootDirResources = getResources(rootDirPath);
 		Set<Resource> result = new LinkedHashSet<>(16);
 		for (Resource rootDirResource : rootDirResources) {
@@ -508,6 +512,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 				result.addAll(doFindPathMatchingJarResources(rootDirResource, rootDirUrl, subPattern));
 			}
 			else {
+				// doFindPathMatchingFileResources 才是真正把包下类扫描出来的东西
 				result.addAll(doFindPathMatchingFileResources(rootDirResource, subPattern));
 			}
 		}
@@ -695,6 +700,9 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 
 		File rootDir;
 		try {
+			// 这一句话很重要，他去根据当前系统路径，把某个包下面的所有文件读出来了
+			// 这里只是把某个包下面的文件都出来，并没有根据 @Component 进行筛选
+			// 筛选是交给其他类做的
 			rootDir = rootDirResource.getFile().getAbsoluteFile();
 		}
 		catch (FileNotFoundException ex) {

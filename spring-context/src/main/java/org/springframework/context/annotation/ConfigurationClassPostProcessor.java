@@ -323,7 +323,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		Set<BeanDefinitionHolder> candidates = new LinkedHashSet<>(configCandidates);
 		Set<ConfigurationClass> alreadyParsed = new HashSet<>(configCandidates.size());
 		do {
-			// 这行代码很重要
+			// 这行代码很重要 处理配置类
 			parser.parse(candidates);
 			parser.validate();
 

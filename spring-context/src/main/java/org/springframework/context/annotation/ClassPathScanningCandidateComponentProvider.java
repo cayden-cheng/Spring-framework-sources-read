@@ -411,6 +411,12 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 		return candidates;
 	}
 
+	/**
+	 * 这个方法内部把 非 Component 注解的排除在外了，
+	 * 并且将他们的内存进行释放
+	 * @param basePackage
+	 * @return
+	 */
 	private Set<BeanDefinition> scanCandidateComponents(String basePackage) {
 		Set<BeanDefinition> candidates = new LinkedHashSet<>();
 		try {
@@ -426,6 +432,9 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 				if (resource.isReadable()) {
 					try {
 						MetadataReader metadataReader = getMetadataReaderFactory().getMetadataReader(resource);
+						// 这个里面其实就对非 component 注解进行了排除，包括 @Configration 注解也进行了排除
+						// 里面有两个集合 一个是 excludeFilters，另外一个是 includeFilters 如果是 在排除集合内或者是在包括集合里面
+						// 那么就排除掉，下面可以进行日子配置
 						if (isCandidateComponent(metadataReader)) {
 							ScannedGenericBeanDefinition sbd = new ScannedGenericBeanDefinition(metadataReader);
 							sbd.setResource(resource);

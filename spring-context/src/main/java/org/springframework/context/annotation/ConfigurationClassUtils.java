@@ -166,6 +166,7 @@ abstract class ConfigurationClassUtils {
 	 */
 	public static boolean isLiteConfigurationCandidate(AnnotationMetadata metadata) {
 		// Do not consider an interface or an annotation...
+		// 排除是接口 等同于 class.isInterface
 		if (metadata.isInterface()) {
 			return false;
 		}
