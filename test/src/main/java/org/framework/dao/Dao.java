@@ -4,6 +4,8 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.context.annotation.Conditional;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Component;
  * 在实现 BeanPostProcessor 的时候，是不能取到当前类的
  */
 @Component
+@Conditional(value = ConditionOwn.class)
+@Order(value = 1)
 public class Dao implements BeanFactoryPostProcessor {
 
     @Override
