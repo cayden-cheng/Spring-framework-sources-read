@@ -1,6 +1,5 @@
 package org.framework.dao;
 
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Component;
  * @date 2020/9/28 9:03
  */
 @Component
-@Order(value = 0)
 public class Nothing {
 
     public void print(){

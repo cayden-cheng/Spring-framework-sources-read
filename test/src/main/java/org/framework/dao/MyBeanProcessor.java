@@ -18,7 +18,7 @@ public class MyBeanProcessor implements BeanPostProcessor {
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        if (beanName.equals("config")){
+        if (beanName.equals("dao")){
             System.out.println("nothing init before");
         }
         return bean;

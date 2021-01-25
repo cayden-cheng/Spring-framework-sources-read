@@ -59,7 +59,7 @@ final class PostProcessorRegistrationDelegate {
 		// Invoke BeanDefinitionRegistryPostProcessors first, if any.
 		// 如果有的话，首先调用BeanDefinitionRegistryPostProcessors。
 		// 只是 new 了一个 hashset 具体有什么用，看完下面再说
-		// 这里存的都是 postprocessName
+		//
 		Set<String> processedBeans = new HashSet<>();
 
 		// 1.判断beanFactory是否为BeanDefinitionRegistry，在这里普通的beanFactory是DefaultListableBeanFactory,
@@ -89,7 +89,7 @@ final class PostProcessorRegistrationDelegate {
 			// 不要在这里初始化 factoryBeans : 我们需要保存所有未初始化的 bean
 			// uninitialized to let the bean factory post-processors apply to them!
 			// 未初始化，让Bean工厂后处理器对其应用！
-			// Separate between BeanDefinitionRegistryPostProcessors that implementD
+			// Separate between BeanDefinitionRegistryPostProcessors that implement
 			// 把 BeanDefinitionRegistryPostProcessors 和他的实现分开
 			// PriorityOrdered, Ordered, and the rest.
 			// 优先顺序，排序，或者其他
@@ -107,18 +107,13 @@ final class PostProcessorRegistrationDelegate {
 					processedBeans.add(ppName);
 				}
 			}
-
-			//这个方法就是进行了一下排序，不太重要
 			sortPostProcessors(currentRegistryProcessors, beanFactory);
-			// 把我们自定义的 postProcess 和 spring内部的 postProcess 合并
 			registryProcessors.addAll(currentRegistryProcessors);
-			// 这个方法很重要，这个方法内部解析了 @ComponentScan 扫描工作就是在这这里完成的,需要点进去详细看
+			// 这个方法很重要，这个方法内部解析了 @ComponentScan 扫描工作就是在这这里完成的
 			invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
-			// 用了之后还清掉了，内存好帮手
 			currentRegistryProcessors.clear();
 
 			// Next, invoke the BeanDefinitionRegistryPostProcessors that implement Ordered.
-			// 接下来，调用实现Ordered的BeanDefinitionRegistryPostProcessors。
 			postProcessorNames = beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true, false);
 			for (String ppName : postProcessorNames) {
 				if (!processedBeans.contains(ppName) && beanFactory.isTypeMatch(ppName, Ordered.class)) {
@@ -132,7 +127,6 @@ final class PostProcessorRegistrationDelegate {
 			currentRegistryProcessors.clear();
 
 			// Finally, invoke all other BeanDefinitionRegistryPostProcessors until no further ones appear.
-			// 最后，调用所有其他BeanDefinitionRegistryPostProcessor，直到没有其他的出现。
 			boolean reiterate = true;
 			while (reiterate) {
 				reiterate = false;
@@ -151,7 +145,6 @@ final class PostProcessorRegistrationDelegate {
 			}
 
 			// Now, invoke the postProcessBeanFactory callback of all processors handled so far.
-			// 现在，调用到目前为止已处理的所有处理器的postProcessBeanFactory回调。
 			invokeBeanFactoryPostProcessors(registryProcessors, beanFactory);
 			invokeBeanFactoryPostProcessors(regularPostProcessors, beanFactory);
 		}
@@ -213,7 +206,6 @@ final class PostProcessorRegistrationDelegate {
 	public static void registerBeanPostProcessors(
 			ConfigurableListableBeanFactory beanFactory, AbstractApplicationContext applicationContext) {
 
-		// 获取 后置处理器的名称
 		String[] postProcessorNames = beanFactory.getBeanNamesForType(BeanPostProcessor.class, true, false);
 
 		// Register BeanPostProcessorChecker that logs an info message when
