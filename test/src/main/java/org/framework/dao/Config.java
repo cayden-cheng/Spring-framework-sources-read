@@ -1,8 +1,6 @@
 package org.framework.dao;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Description;
+import org.springframework.context.annotation.*;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,4 +11,11 @@ import org.springframework.stereotype.Component;
 @ComponentScan("org.framework.dao")
 @Description("nothing")
 public class Config {
+
+    @Bean
+    //@Conditional(ConditionOwn.class)
+    public TestBean createTestBean(){
+        return new TestBean();
+    }
+
 }

@@ -29,4 +29,5 @@ public class Test {
 		Dao bean = ac.getBean(Dao.class);
 		bean.print();
 	}
+
 }
